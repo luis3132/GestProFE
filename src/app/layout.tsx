@@ -16,7 +16,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/gestpro.png" />
       </head>
-      <body className={`antialiased h-dvh`}>{children}</body>
+      <body className={`antialiased h-dvh`}>
+        {children}
+      </body>
     </html>
   );
 }

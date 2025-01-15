@@ -13,7 +13,7 @@ const NavBarLogOut = () => {
 
     return (
         <nav className={`flex flex-col bg-green-500 justify-around items-center w-full shadow-xl ${showMenu ? "h-36" : "h-20"} duration-500 overflow-hidden max-md:pt-2`}>
-            <div className="flex justify-between items-center w-full">
+            <div className="flex justify-between items-center w-full max-md:mb-4">
                 <div className="flex items-center ml-3 rounded-2xl shadow-2xl py-1 px-2 cursor-default">
                     <Image src="/gestpro.png" alt="GestPro" width={50} height={50} />
                     <h1 className="text-white text-2xl font-bold">GestPro</h1>
@@ -30,7 +30,7 @@ const NavBarLogOut = () => {
                 </div>
                 <div className="flex items-center md:hidden mr-3">
                     <button className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4" onClick={handleShowMenu}>
-                        <Icon icon="iconamoon:menu-burger-horizontal" width="24" height="24" className="font-bold" />
+                        <Icon icon="iconamoon:menu-burger-horizontal" width="24" height="24" className={`font-bold duration-500 ${showMenu ? "" : "rotate-90"}`} />
                     </button>
                 </div>
             </div>

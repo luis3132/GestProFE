@@ -1,6 +1,10 @@
 export interface usuarioLogin {
-    nombrenombreUsuario: string;
+    nombreUsuario: string;
     contrasena: string;
+}
+
+export interface token {
+    token: string;
 }
 
 export interface rolEmpNuevo {
@@ -10,7 +14,7 @@ export interface rolEmpNuevo {
 
 export interface rolUsrNuevo {
     usuario: string;
-    roles: string;
+    roles: number;
 }
 
 export interface roles {

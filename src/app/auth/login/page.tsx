@@ -1,10 +1,71 @@
 "use client";
 
+import { token, usuarioLogin } from "@/lib/types/types";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Image from "next/image";
 import Link from "next/link";
+import { ChangeEvent, useState } from "react";
+import Swal from "sweetalert2";
+import Cookies from 'js-cookie';
 
 export default function Home() {
+
+  const [login, setLogin] = useState<usuarioLogin>({
+    nombreUsuario: "",
+    contrasena: ""
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLogin({
+      ...login,
+      [e.target.id]: e.target.value
+    });
+  }
+
+  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (login.nombreUsuario === "" || login.contrasena === "") {
+      Swal.fire({
+        title: "Error",
+        text: "Por favor, rellene todos los campos",
+        icon: "error"
+      });
+    } else {
+      loginFunction();
+    }
+  }
+
+  const loginFunction = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_HOSTNAME}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(login)
+      });
+      if (res.ok) {
+        const data: token = await res.json();
+        Cookies.set("authToken", data.token);
+        sessionStorage.clear();
+        window.location.href = "/routes";
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: "Usuario o contraseña incorrectos",
+          icon: "error"
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Error",
+        text: "Ha ocurrido un error, por favor intente de nuevo",
+        icon: "error"
+      });
+    }
+  }
+
   return (
     <>
       <div className="h-dvh w-full bg-green-500 overflow-y-scroll custom-scrollbar">
@@ -28,7 +89,7 @@ export default function Home() {
             </div>
           </div>
           <div className="max-md:w-full flex justify-center">
-            <form className="bg-white px-8 pt-8 pb-4 rounded-lg shadow-xl w-[95%] md:w-96">
+            <form id="login" className="bg-white px-8 pt-8 pb-4 rounded-lg shadow-xl w-[95%] md:w-96" onSubmit={handleSubmit} >
               <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
@@ -36,8 +97,10 @@ export default function Home() {
                 </label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="username"
+                  id="nombreUsuario"
                   type="text"
+                  maxLength={10}
+                  onChange={handleChange}
                   placeholder="Nombre de Usuario" />
               </div>
               <div className="mb-6">
@@ -46,24 +109,26 @@ export default function Home() {
                 </label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
+                  id="contrasena"
                   type="password"
+                  minLength={8}
+                  maxLength={20}
+                  onChange={handleChange}
                   placeholder="********" />
               </div>
               <div className="flex items-center justify-between">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 md:px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
-                  type="button"
-                  onClick={() => alert('Iniciar Sesión')}>
-                  <Icon icon="material-symbols:login" className="font-bold mr-1" width="24" height="24" />
-                  Iniciar Sesión
-                </button>
                 <Link
                   className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
                   href={"/auth/register"}>
                   <Icon icon="mdi:register" width="24" height="24" className="font-bold mr-1" />
                   Registrarse
                 </Link>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 md:px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
+                  type="submit" form="login">
+                  <Icon icon="material-symbols:login" className="font-bold mr-1" width="24" height="24" />
+                  Iniciar Sesión
+                </button>
               </div>
               <div className="flex justify-center p-2">
                 <Link href={"/"} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center">
