@@ -4,7 +4,6 @@ import Comprobar from "@/lib/scripts/comprobar";
 import { usuario } from "@/lib/types/types";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
-import Perfil from "@/components/usuario/perfil";
 
 export default function Home() {
 
@@ -30,12 +29,17 @@ export default function Home() {
     if (!usuario && !token) {
       setReload(!reload);
     }
+    if (usuario) {
+      if (!usuario.roles.some(r => r.roles.roles === "ADMIN")) {
+        window.location.href = "/home";
+      }
+    }
   }, [usuario, token, reload]);
 
   return (
     <>
-      <div className="w-full bg-purple-100 h-[91.6%] p-8">
-        <Perfil usuario={usuario} />
+      <div className="w-full bg-purple-100 h-[91.6%] ">
+
       </div>
     </>
   );

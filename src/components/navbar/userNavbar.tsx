@@ -1,11 +1,15 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { FC, useState } from "react";
 import Cookies from "js-cookie";
 
+interface UserNavbarProps {
+    admin: boolean;
+    changeRole: () => void;
+}
 
-const UserNavbar = () => {
+const UserNavbar: FC<UserNavbarProps> = ({ admin, changeRole }) => {
 
     const [showMenu, setShowMenu] = useState(false);
 
@@ -26,17 +30,25 @@ const UserNavbar = () => {
                     <Image src="/gestpro.png" alt="GestPro" width={50} height={50} />
                     <h1 className="text-white text-2xl font-bold">GestPro</h1>
                 </Link>
+                {admin && <Link href={"/admin"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4 md:hidden" onClick={changeRole}>
+                    <Icon icon="icon-park-outline:change" width="30" height="30" className="font-bold mr-1" />
+                    <p className="font-bold">Admin</p>
+                </Link>}
                 <div className="flex items-center max-md:hidden mr-3">
-                    <Link href={"/auth/register"} className="flex items-center h-12 rounded-lg shadow-xl ml-3 text-lg text-white hover:bg-green-600 px-4">
+                    <Link href={"/home/empleos"} className="flex items-center h-12 rounded-lg shadow-xl ml-3 text-lg text-white hover:bg-green-600 px-4">
                         <Icon icon="clarity:employee-line" width="30" height="30" className="font-bold mr-1" />
                         <p className="font-bold">Empleos</p>
                     </Link>
-                    <Link href={"/auth/register"} className="flex items-center h-12 rounded-lg shadow-xl ml-3 text-lg text-white hover:bg-green-600 px-4">
+                    <Link href={"/home/empresas"} className="flex items-center h-12 rounded-lg shadow-xl ml-3 text-lg text-white hover:bg-green-600 px-4">
                         <Icon icon="ic:baseline-business" width="24" height="24" className="font-bold mr-1" />
                         <p className="font-bold">Empresas</p>
                     </Link>
                 </div>
                 <div className="flex items-center max-md:hidden mr-3">
+                    {admin && <Link href={"/admin"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4" onClick={changeRole}>
+                        <Icon icon="icon-park-outline:change" width="30" height="30" className="font-bold mr-1" />
+                        <p className="font-bold">Cambiar a Admin</p>
+                    </Link>}
                     <button className="flex items-center h-12 rounded-lg shadow-xl ml-3 text-lg bg-red-400 text-white hover:bg-red-500 px-4" onClick={handleLogOut}>
                         <Icon icon="material-symbols:logout-rounded" width="24" height="24" className="font-bold mr-1" />
                         <p className="font-bold">Cerrar Sesión</p>
@@ -49,11 +61,11 @@ const UserNavbar = () => {
                 </div>
             </div>
             <div className="flex items-center md:hidden justify-around w-full pb-1">
-                <Link href={"/auth/login"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4">
+                <Link href={"/home/empleos"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4">
                     <Icon icon="clarity:employee-line" width="24" height="24" className="font-bold mr-1" />
                     <p className="font-bold">Empleos</p>
                 </Link>
-                <Link href={"/auth/login"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4">
+                <Link href={"/home/empresas"} className="flex items-center h-12 rounded-lg shadow-xl text-lg text-white hover:bg-green-600 px-4">
                     <Icon icon="ic:baseline-business" width="24" height="24" className="font-bold mr-1" />
                     <p className="font-bold">Empresas</p>
                 </Link>

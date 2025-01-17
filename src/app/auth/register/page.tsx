@@ -72,6 +72,12 @@ export default function Home() {
       Cookies.set("authToken", data.token);
       sessionStorage.clear();
       window.location.href = "/routes";
+    } else if (response.status === 400) {
+      Swal.fire({
+        title: "Error",
+        text: "El usuario con esa Cedula o nombre de usuario, ya existe!",
+        icon: "error"
+      });
     } else {
       Swal.fire({
         title: "Error",

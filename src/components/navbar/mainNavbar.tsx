@@ -2,7 +2,7 @@
 
 import useAuth from "@/lib/hook/auth";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import AdminNavbar from "./adminNavbar";
 import UserNavbar from "./userNavbar";
@@ -12,6 +12,7 @@ import CryptoJS from "crypto-js";
 const MainNavbar = () => {
 
     const { usuario, AuthContext, LogOut, ChangeRole, role } = useAuth({ cookie: Cookies.get("authToken") });
+    const [admin, setAdmin] = useState<boolean>(false);
 
     useEffect(() => {
         if (usuario) {
@@ -38,6 +39,9 @@ const MainNavbar = () => {
                     }
                 });
             }
+            if (usuario?.roles.some(i => i.roles.roles === "ADMIN") && usuario?.roles.some(i => i.roles.roles === "USER")) {
+                setAdmin(true);
+            }
         }
     }, [usuario, LogOut]);
 
@@ -51,9 +55,9 @@ const MainNavbar = () => {
         }}>
             {usuario === null && <NavBarLogOut />}
             {usuario?.roles.some(i => i.roles.roles === "ADMIN") && usuario?.roles.some(i => i.roles.roles === "USER") &&
-                (role && <AdminNavbar />) && (!role && <UserNavbar />)}
-            {usuario?.roles.some(i => i.roles.roles === "ADMIN") && <AdminNavbar />}
-            {usuario?.roles.some(i => i.roles.roles === "USER") && <UserNavbar />}
+                (!role && <AdminNavbar admin={admin} changeRole={ChangeRole} />) || (role && <UserNavbar admin={admin} changeRole={ChangeRole} />)}
+            {usuario?.roles.some(i => i.roles.roles === "ADMIN") && !usuario?.roles.some(i => i.roles.roles === "USER") && <AdminNavbar admin={admin} changeRole={ChangeRole} />}
+            {usuario?.roles.some(i => i.roles.roles === "USER") && !usuario?.roles.some(i => i.roles.roles === "ADMIN") && <UserNavbar admin={admin} changeRole={ChangeRole} />}
         </AuthContext.Provider>
     )
 };
