@@ -46,7 +46,7 @@ const Perfil: FC<PerfilProps> = ({ usuario }) => {
 
     return (
         <>
-            <div className="md:w-1/4 w-full bg-white p-4 rounded-lg shadow-lg">
+            <div className="w-full bg-white p-4 rounded-lg shadow-lg">
                 <h1 className="text-center font-bold text-2xl">Perfil</h1>
                 {edit ? (
                     <div className="w-full ">

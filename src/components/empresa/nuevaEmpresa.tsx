@@ -6,10 +6,11 @@ import Cookies from "js-cookie";
 
 interface NuevaEmpresaProps {
     usuario: usuario | null;
+    update: () => void;
 }
 
-const NuevaEmpresa: FC<NuevaEmpresaProps> = ({ usuario }) => {
-    
+const NuevaEmpresa: FC<NuevaEmpresaProps> = ({ usuario, update }) => {
+
     const [localNuevo, setLocalNuevo] = useState<localNuevo>({
         id: "",
         ciudad: "",
@@ -34,7 +35,7 @@ const NuevaEmpresa: FC<NuevaEmpresaProps> = ({ usuario }) => {
     const token: string | undefined = Cookies.get("authToken");
 
     const handleChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        if (e.target.id !== "nombreLocal"){
+        if (e.target.id !== "nombreLocal") {
             setEmpresa({
                 ...empresa,
                 [e.target.id]: e.target.value
@@ -49,7 +50,7 @@ const NuevaEmpresa: FC<NuevaEmpresaProps> = ({ usuario }) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
+
         if (empresa.nit === "" || empresa.nombre === "" || empresa.direccion === "" || empresa.telefono === "" || empresa.departamento === "" || empresa.ciudad === "" || empresa.email === "" || empresa.estado === "" || localNuevo.nombre === "") {
             Swal.fire({
                 icon: "error",
@@ -86,22 +87,13 @@ const NuevaEmpresa: FC<NuevaEmpresaProps> = ({ usuario }) => {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            if (data.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Correcto",
-                    text: "Empresa creada correctamente"
-                }).then(() => {
-                    window.location.reload();
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Error al crear la empresa"
-                });
-            }
+            Swal.fire({
+                icon: "success",
+                title: "Correcto",
+                text: "Empresa creada correctamente"
+            }).then(() => {
+                update();
+            });
         } else {
             Swal.fire({
                 icon: "error",
